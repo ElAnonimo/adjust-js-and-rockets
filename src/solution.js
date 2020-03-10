@@ -12,17 +12,20 @@ const prepareData = data => {
     const {
       flight_number,
       mission_name,
-      rocket: { second_stage }
+      rocket: { second_stage },
+      launch_date_utc
     } = x;
 
     return {
       flight_number,
       mission_name,
-      payloads_count: second_stage.payloads.length
+      payloads_count: second_stage.payloads.length,
+      launch_date_utc
     };
   })
   .sort((a, b) => new Date(a.launch_date_utc).getTime() < new Date(b.launch_date_utc).getTime() ? -1 : 1)
-  .sort((a, b) => b.payloads_count - a.payloads_count);
+  .sort((a, b) => a.payloads_count > b.payloads_count ? -1 : 1)
+  .map(({ launch_date_utc, ...rest }) => rest);
 
   return values;
 };
